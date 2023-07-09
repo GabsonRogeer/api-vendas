@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
     private String description;
@@ -23,6 +24,13 @@ public class Product {
     private String name;
     @Column(name = "price", precision = 16, scale = 2)
     private BigDecimal price;
-    @Column(length = 255)
+    @Column(length = 255, unique = true)
     private String sku;
+    @Column
+    private LocalDate registrationDate;
+
+    @PrePersist
+    public void prePersist(){
+        setRegistrationDate(LocalDate.now());
+    }
 }
